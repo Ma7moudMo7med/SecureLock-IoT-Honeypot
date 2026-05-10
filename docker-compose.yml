@@ -1,0 +1,70 @@
+version: "3.9"
+
+# =============================================================================
+# Smart Lock Honeypot Simulation - Docker Compose
+# Vulnerable-by-design IoT Smart Lock platform for T-Pot integration
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # Backend - ASP.NET Core Minimal API (.NET 8)
+  # Exposes the intentionally vulnerable smart lock REST APIs
+  # ---------------------------------------------------------------------------
+  smart-lock-service:
+    build:
+      context: ./smart-lock-service
+      dockerfile: Dockerfile
+    container_name: smartlock-backend
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - JWT__Issuer=SmartLuckController
+      - JWT__Audience=SmartLuckClients
+      - JWT__Secret=honeypot-weak-secret-key-do-not-use-in-real-systems-1234567890
+      - JWT__ExpiresMinutes=120
+      - HONEYPOT__DeviceName=My Smart Home
+      - HONEYPOT__FirmwareVersion=2.4.1
+      - HONEYPOT__SerialNumber=SLC-2024-A7F92E
+    ports:
+      - "8080:8080"
+    networks:
+      - smartlock-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Frontend - Next.js dashboard
+  # Smart Luck Controller UI matching the reference design
+  # ---------------------------------------------------------------------------
+  frontend-app:
+    build:
+      context: ./frontend-app
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8080
+    container_name: smartlock-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - INTERNAL_API_URL=http://smart-lock-service:8080
+    ports:
+      - "3000:3000"
+    networks:
+      - smartlock-net
+    depends_on:
+      - smart-lock-service
+
+# =============================================================================
+# Networking - isolated bridge network so the honeypot can be placed
+# next to (but not inside) a T-Pot deployment.
+# =============================================================================
+networks:
+  smartlock-net:
+    driver: bridge
+    name: smartlock-net
