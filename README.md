@@ -24,6 +24,12 @@ SecureLock simulates a modern IoT ecosystem consisting of a management dashboard
   <p><b>📊 Main Dashboard - Real-time IoT Control Center</b></p>
   <img src="docs/images/dashboard.png" width="850" alt="SecureLock Dashboard">
   <br><br>
+  <p><b>💡 Smart Lights - Interactive IoT Device Management</b></p>
+  <img src="docs/images/lights.png" width="850" alt="SecureLock Lights">
+  <br><br>
+  <p><b>🚪 Door Access Control - Secure Entry Simulation</b></p>
+  <img src="docs/images/doors.png" width="850" alt="SecureLock Doors">
+  <br><br>
   <p><b>⚙️ System Settings - Advanced Configuration Simulation</b></p>
   <img src="docs/images/settings.png" width="850" alt="SecureLock Settings">
 </div>
