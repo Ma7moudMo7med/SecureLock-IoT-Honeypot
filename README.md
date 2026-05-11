@@ -15,11 +15,28 @@ SecureLock simulates a modern IoT ecosystem consisting of a management dashboard
 
 ---
 
+## 🖼 Screenshots
+
+<div align="center">
+  <p><b>🔐 Secure Login Portal - Enterprise Authentication</b></p>
+  <img src="docs/images/login.png" width="850" alt="SecureLock Login">
+  <br><br>
+  <p><b>📊 Main Dashboard - Real-time IoT Control Center</b></p>
+  <img src="docs/images/dashboard.png" width="850" alt="SecureLock Dashboard">
+  <br><br>
+  <p><b>⚙️ System Settings - Advanced Configuration Simulation</b></p>
+  <img src="docs/images/settings.png" width="850" alt="SecureLock Settings">
+</div>
+
+---
+
+
 ## 🛠 Tech Stack & Tools
 
 The project is built using modern, industry-standard technologies to ensure a realistic feel:
 
 ### 🎨 Frontend (The Control Center)
+
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS (Modern Dark UI)
@@ -28,6 +45,7 @@ The project is built using modern, industry-standard technologies to ensure a re
 - **State Management:** React Hooks & Context API
 
 ### ⚙️ Backend (The Logic Engine)
+
 - **Framework:** ASP.NET Core 8 (Minimal APIs)
 - **Security:** JWT Authentication
 - **Documentation:** Swagger / OpenAPI
@@ -35,6 +53,7 @@ The project is built using modern, industry-standard technologies to ensure a re
 - **Data:** In-memory store (volatile for honeypot safety)
 
 ### 🐳 Infrastructure
+
 - **Containerization:** Docker
 - **Orchestration:** Docker Compose
 - **Network:** Isolated Bridge Network (`smartlock-net`)
@@ -46,17 +65,23 @@ The project is built using modern, industry-standard technologies to ensure a re
 The project is architected into three primary layers, each serving a specific role:
 
 ### 1. Presentation Layer (`frontend-app`)
-This is the interface the "user" (or attacker) interacts with. It looks like a premium Smart Home dashboard. 
+
+This is the interface the "user" (or attacker) interacts with. It looks like a premium Smart Home dashboard.
+
 - **Goal:** Provide a convincing target that encourages interaction.
 - **Key Modules:** Login, Dashboard, Device Settings, System Logs, Firmware Update.
 
 ### 2. API & Simulation Layer (`smart-lock-service`)
+
 The brain of the operation. It handles all requests and simulates the "hardware" responses.
+
 - **Goal:** Execute business logic and simulate vulnerabilities (like command injection or user enumeration).
 - **Key Modules:** Auth Controller, Device Service, Logging Service, Firmware Mock.
 
 ### 3. Infrastructure Layer (Docker)
+
 Ensures the entire stack is portable and isolated.
+
 - **Goal:** Prevent any simulated vulnerability from affecting the host machine.
 - **Key Files:** `docker-compose.yml`, `Dockerfile` (per service).
 
@@ -65,15 +90,19 @@ Ensures the entire stack is portable and isolated.
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 Before you begin, ensure you have the following installed on your system:
+
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Includes Docker Compose)
 - [Node.js v18+](https://nodejs.org/) (Optional: Only for local dev without Docker)
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (Optional: Only for local dev without Docker)
 
 ### Installation & Deployment
+
 Follow these commands in order to get the project up and running:
 
 1. **Clone the Repository:**
+
    ```bash
    git clone https://github.com/Ma7moudMo7med/Smart-Lock-Simulation.git
    cd Smart-Lock-Simulation
@@ -81,12 +110,14 @@ Follow these commands in order to get the project up and running:
 
 2. **Setup Environment Variables:**
    Copy the example environment file:
+
    ```bash
    cp .env.example .env
    ```
 
 3. **Build and Run (Docker Compose):**
    This is the recommended way to run the project.
+
    ```bash
    docker compose build
    docker compose up -d
@@ -104,21 +135,22 @@ Follow these commands in order to get the project up and running:
 
 Once the services are running, you can access them via your browser:
 
-| Service | URL | Description |
-| :--- | :--- | :--- |
-| **User Dashboard** | [http://localhost:3000](http://localhost:3000) | The main UI for interacting with the lock. |
-| **API Backend** | [http://localhost:8080](http://localhost:8080) | The backend API root. |
-| **Swagger UI** | [http://localhost:8080/swagger](http://localhost:8080/swagger) | Interactive API documentation. |
-| **Health Check** | [http://localhost:8080/health](http://localhost:8080/health) | API health status. |
+| Service            | URL                                                            | Description                                |
+| :----------------- | :------------------------------------------------------------- | :----------------------------------------- |
+| **User Dashboard** | [http://localhost:3000](http://localhost:3000)                 | The main UI for interacting with the lock. |
+| **API Backend**    | [http://localhost:8080](http://localhost:8080)                 | The backend API root.                      |
+| **Swagger UI**     | [http://localhost:8080/swagger](http://localhost:8080/swagger) | Interactive API documentation.             |
+| **Health Check**   | [http://localhost:8080/health](http://localhost:8080/health)   | API health status.                         |
 
 ### 🔑 Seeded Credentials (Intentional Weakness)
+
 The following accounts are pre-configured to test different access levels:
 
-| Username | Password | Role |
-| :--- | :--- | :--- |
-| `admin` | `admin123` | Full Administrative Access |
-| `technician` | `tech123` | Maintenance & Logs |
-| `guest` | `guest` | Limited View Only |
+| Username     | Password   | Role                       |
+| :----------- | :--------- | :------------------------- |
+| `admin`      | `admin123` | Full Administrative Access |
+| `technician` | `tech123`  | Maintenance & Logs         |
+| `guest`      | `guest`    | Limited View Only          |
 
 ---
 
@@ -128,15 +160,15 @@ The following accounts are pre-configured to test different access levels:
 
 The backend exposes several endpoints, some of which are intentionally vulnerable or provide sensitive information to simulate a poorly secured IoT device.
 
-| Method | Path | Purpose | Vulnerability Simulation |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/login` | User authentication | Verbose errors, User enumeration |
-| `GET` | `/api/device/status` | Current lock & sensor state | Information disclosure |
-| `POST` | `/api/device/lock` | Lock the device | Unauthorized access potential |
-| `GET` | `/api/admin/logs` | System logs | Exposed administrative route |
-| `POST` | `/api/firmware/update`| Firmware update simulation | No signature verification |
-| `GET` | `/api/export/config` | Export system configuration | Plaintext secrets disclosure |
-| `GET` | `/api/debug/system` | System debug information | Fake environment & shell leak |
+| Method | Path                   | Purpose                     | Vulnerability Simulation         |
+| :----- | :--------------------- | :-------------------------- | :------------------------------- |
+| `POST` | `/api/auth/login`      | User authentication         | Verbose errors, User enumeration |
+| `GET`  | `/api/device/status`   | Current lock & sensor state | Information disclosure           |
+| `POST` | `/api/device/lock`     | Lock the device             | Unauthorized access potential    |
+| `GET`  | `/api/admin/logs`      | System logs                 | Exposed administrative route     |
+| `POST` | `/api/firmware/update` | Firmware update simulation  | No signature verification        |
+| `GET`  | `/api/export/config`   | Export system configuration | Plaintext secrets disclosure     |
+| `GET`  | `/api/debug/system`    | System debug information    | Fake environment & shell leak    |
 
 ---
 
@@ -144,17 +176,16 @@ The backend exposes several endpoints, some of which are intentionally vulnerabl
 
 Everything in this project is **simulated**. The container never executes actual attacker payloads; it only records the attempt and responds as a real vulnerable device would.
 
-| Vulnerability Class | Simulated Behavior | Goal for Researcher |
-| :--- | :--- | :--- |
-| **Weak Authentication** | Uses common default passwords (`admin123`, `tech123`). | Track brute-force & credential stuffing. |
-| **User Enumeration** | Returns different errors for "Wrong Password" vs "User Not Found". | Identify account discovery attempts. |
-| **Information Disclosure**| `/api/export/config` returns secrets in plaintext. | Monitor for sensitive data exfiltration. |
-| **Command Injection** | `/api/debug/system` echoes back shell commands. | Capture RCE (Remote Code Execution) payloads. |
-| **Broken RBAC** | Admin endpoints are reachable with low-privilege tokens. | Track privilege escalation attempts. |
-| **Verbose Debugging** | API returns stack traces and environment variables. | Observe reconnaissance behavior. |
-| **Insecure Updates** | Accepts any URL for firmware without validation. | Simulate malicious firmware delivery. |
-| **Sequential Sessions** | Predictable session IDs in the backend. | Track session hijacking attempts. |
-
+| Vulnerability Class        | Simulated Behavior                                                 | Goal for Researcher                           |
+| :------------------------- | :----------------------------------------------------------------- | :-------------------------------------------- |
+| **Weak Authentication**    | Uses common default passwords (`admin123`, `tech123`).             | Track brute-force & credential stuffing.      |
+| **User Enumeration**       | Returns different errors for "Wrong Password" vs "User Not Found". | Identify account discovery attempts.          |
+| **Information Disclosure** | `/api/export/config` returns secrets in plaintext.                 | Monitor for sensitive data exfiltration.      |
+| **Command Injection**      | `/api/debug/system` echoes back shell commands.                    | Capture RCE (Remote Code Execution) payloads. |
+| **Broken RBAC**            | Admin endpoints are reachable with low-privilege tokens.           | Track privilege escalation attempts.          |
+| **Verbose Debugging**      | API returns stack traces and environment variables.                | Observe reconnaissance behavior.              |
+| **Insecure Updates**       | Accepts any URL for firmware without validation.                   | Simulate malicious firmware delivery.         |
+| **Sequential Sessions**    | Predictable session IDs in the backend.                            | Track session hijacking attempts.             |
 
 ---
 
@@ -188,4 +219,5 @@ This project is for **educational and research purposes only**. It is designed t
 Contributions are welcome! If you have ideas for more simulated vulnerabilities or UI improvements, feel free to open a Pull Request.
 
 ---
+
 Created with ❤️ for the Security Community.
