@@ -1,145 +1,191 @@
-# Smart Luck Controller — Smart Lock Honeypot Simulation
+# 🔐 SecureLock IoT — Enterprise Smart Lock Simulation
 
-A vulnerable-by-design IoT smart lock platform built to sit safely alongside a [T-Pot](https://github.com/telekom-security/tpotce) honeypot deployment. It looks and behaves like a real enterprise smart-home product, but every "vulnerability" is simulated — no real shell execution, no real file access, no real RCE.
+[![Project Status: Active](https://img.shields.io/badge/Project%20Status-Active-brightgreen.svg)](https://github.com/Ma7moudMo7med/Smart-Lock-Simulation)
+[![Platform: IoT Honeypot](https://img.shields.io/badge/Platform-IoT%20Honeypot-orange.svg)]()
+[![Backend: .NET 8](https://img.shields.io/badge/Backend-.NET%208-blue.svg)]()
+[![Frontend: Next.js 14](https://img.shields.io/badge/Frontend-Next.js%2014-black.svg)]()
 
-> **Safety first.** All dangerous behavior is logged and echoed back as if it executed. Nothing escapes the container.
-
----
-
-## Architecture
-
-```
-+---------------------+      +---------------------------+
-|   frontend-app      | ---> |   smart-lock-service       |
-|   Next.js 14 / TS   |      |   ASP.NET Core .NET 8      |
-|   :3000             |      |   :8080                    |
-+---------------------+      +---------------------------+
-        ^                              |
-        |                              v
-   Browser                       In-memory store
-                                 (Users, Devices, Logs)
-```
-
-Two containers, one bridge network (`smartlock-net`).
+A professional-grade, vulnerable-by-design IoT Smart Lock simulation platform. This project is designed for **security research, education, and honeypot deployment** (ideally alongside T-Pot). It provides a realistic enterprise smart-home interface while simulating common IoT vulnerabilities to attract and study attacker behavior in a safe, containerized environment.
 
 ---
 
-## Tech Stack
+## 📖 Project Overview
 
-| Layer       | Technology                                            |
-|-------------|--------------------------------------------------------|
-| Frontend    | Next.js 14 · React 18 · TypeScript · TailwindCSS · Axios |
-| Backend     | ASP.NET Core 8 Minimal API · JWT · Swashbuckle         |
-| Container   | Docker · Docker Compose                                |
-| Future      | PostgreSQL-ready data layer                            |
+SecureLock simulates a modern IoT ecosystem consisting of a management dashboard and a backend service that controls "smart locks." It mimics real-world device communication, firmware updates, and administrative controls. However, every vulnerability is a **safe simulation**: it records malicious intent without ever executing dangerous commands on the host system.
 
 ---
 
-## Running locally
+## 🛠 Tech Stack & Tools
 
-```bash
-docker compose build
-docker compose up -d
-```
+The project is built using modern, industry-standard technologies to ensure a realistic feel:
 
-Then open:
+### 🎨 Frontend (The Control Center)
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS (Modern Dark UI)
+- **Icons:** Lucide React
+- **Animations:** Framer Motion
+- **State Management:** React Hooks & Context API
 
-- **Dashboard** → http://localhost:3000
-- **API**       → http://localhost:8080
-- **Swagger**   → http://localhost:8080/swagger
-- **Health**    → http://localhost:8080/health
+### ⚙️ Backend (The Logic Engine)
+- **Framework:** ASP.NET Core 8 (Minimal APIs)
+- **Security:** JWT Authentication
+- **Documentation:** Swagger / OpenAPI
+- **Logging:** Structured JSON logging (ELK-ready)
+- **Data:** In-memory store (volatile for honeypot safety)
 
-### Seeded honeypot accounts
-
-| Username    | Password   | Role          |
-|-------------|------------|---------------|
-| `admin`     | `admin123` | Administrator |
-| `technician`| `tech123`  | Technician    |
-| `guest`     | `guest`    | Guest         |
-
-These weak credentials are intentional — the goal is to attract attackers.
-
----
-
-## Required API Endpoints
-
-| Method | Path                     | Purpose                                 |
-|--------|--------------------------|-----------------------------------------|
-| POST   | `/api/auth/login`        | Login (verbose errors, user enumeration)|
-| GET    | `/api/device/status`     | Doors, gate, lights, online state, battery |
-| POST   | `/api/device/lock`       | Lock a device                           |
-| POST   | `/api/device/unlock`     | Unlock a device                         |
-| GET    | `/api/device/settings`   | Read device + system settings           |
-| POST   | `/api/device/settings`   | Update settings (no validation)         |
-| GET    | `/api/admin/logs`        | Access logs (exposed admin route)       |
-| POST   | `/api/firmware/update`   | Fake firmware update                    |
-| GET    | `/api/export/config`     | Dump full config — including secrets    |
-| GET    | `/api/debug/system`      | Debug page — versions, env, fake shell  |
-
-Plus auxiliary endpoints (`/health`, `/api/device/list`, `/api/auth/me`, etc.).
+### 🐳 Infrastructure
+- **Containerization:** Docker
+- **Orchestration:** Docker Compose
+- **Network:** Isolated Bridge Network (`smartlock-net`)
 
 ---
 
-## Vulnerability Simulation (safe)
+## 🏗 System Layers & Architecture
 
-| Class                   | Behavior                                                  |
-|-------------------------|-----------------------------------------------------------|
-| Weak login              | `admin/admin123`, `technician/tech123`                    |
-| User enumeration        | "User not found" vs "Wrong password"                      |
-| Verbose errors          | Stack-trace-like fields returned to clients               |
-| No rate limiting        | Unlimited login attempts                                   |
-| Exposed admin routes    | `/api/admin/logs` reachable without proper RBAC           |
-| Debug endpoints         | `/api/debug/system` echoes env-like data                  |
-| Fake firmware update    | Accepts any URL, "applies" without signature checks       |
-| Config export           | `/api/export/config` returns secrets in plaintext         |
-| Hidden routes           | `/api/.git/HEAD`, `/api/backup.zip`, `/api/wp-admin`      |
-| Command-injection demo  | Echoes the payload — never runs it                        |
-| Predictable session IDs | Sequential counters in fake session listing               |
+The project is architected into three primary layers, each serving a specific role:
 
-Everything is **simulated**. The container never runs an attacker payload; it just records the attempt and replies with what a vulnerable lock might say.
+### 1. Presentation Layer (`frontend-app`)
+This is the interface the "user" (or attacker) interacts with. It looks like a premium Smart Home dashboard. 
+- **Goal:** Provide a convincing target that encourages interaction.
+- **Key Modules:** Login, Dashboard, Device Settings, System Logs, Firmware Update.
+
+### 2. API & Simulation Layer (`smart-lock-service`)
+The brain of the operation. It handles all requests and simulates the "hardware" responses.
+- **Goal:** Execute business logic and simulate vulnerabilities (like command injection or user enumeration).
+- **Key Modules:** Auth Controller, Device Service, Logging Service, Firmware Mock.
+
+### 3. Infrastructure Layer (Docker)
+Ensures the entire stack is portable and isolated.
+- **Goal:** Prevent any simulated vulnerability from affecting the host machine.
+- **Key Files:** `docker-compose.yml`, `Dockerfile` (per service).
 
 ---
 
-## Project Layout
+## 🚀 Getting Started
 
-```
+### Prerequisites
+Before you begin, ensure you have the following installed on your system:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Includes Docker Compose)
+- [Node.js v18+](https://nodejs.org/) (Optional: Only for local dev without Docker)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (Optional: Only for local dev without Docker)
+
+### Installation & Deployment
+Follow these commands in order to get the project up and running:
+
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/Ma7moudMo7med/Smart-Lock-Simulation.git
+   cd Smart-Lock-Simulation
+   ```
+
+2. **Setup Environment Variables:**
+   Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Build and Run (Docker Compose):**
+   This is the recommended way to run the project.
+   ```bash
+   docker compose build
+   docker compose up -d
+   ```
+
+4. **Verify the Services:**
+   Check if containers are running:
+   ```bash
+   docker compose ps
+   ```
+
+---
+
+## 🌐 Accessing the Simulation
+
+Once the services are running, you can access them via your browser:
+
+| Service | URL | Description |
+| :--- | :--- | :--- |
+| **User Dashboard** | [http://localhost:3000](http://localhost:3000) | The main UI for interacting with the lock. |
+| **API Backend** | [http://localhost:8080](http://localhost:8080) | The backend API root. |
+| **Swagger UI** | [http://localhost:8080/swagger](http://localhost:8080/swagger) | Interactive API documentation. |
+| **Health Check** | [http://localhost:8080/health](http://localhost:8080/health) | API health status. |
+
+### 🔑 Seeded Credentials (Intentional Weakness)
+The following accounts are pre-configured to test different access levels:
+
+| Username | Password | Role |
+| :--- | :--- | :--- |
+| `admin` | `admin123` | Full Administrative Access |
+| `technician` | `tech123` | Maintenance & Logs |
+| `guest` | `guest` | Limited View Only |
+
+---
+
+---
+
+## 📡 API Reference
+
+The backend exposes several endpoints, some of which are intentionally vulnerable or provide sensitive information to simulate a poorly secured IoT device.
+
+| Method | Path | Purpose | Vulnerability Simulation |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/login` | User authentication | Verbose errors, User enumeration |
+| `GET` | `/api/device/status` | Current lock & sensor state | Information disclosure |
+| `POST` | `/api/device/lock` | Lock the device | Unauthorized access potential |
+| `GET` | `/api/admin/logs` | System logs | Exposed administrative route |
+| `POST` | `/api/firmware/update`| Firmware update simulation | No signature verification |
+| `GET` | `/api/export/config` | Export system configuration | Plaintext secrets disclosure |
+| `GET` | `/api/debug/system` | System debug information | Fake environment & shell leak |
+
+---
+
+## 🛡 Simulated Vulnerabilities (Safe for Research)
+
+Everything in this project is **simulated**. The container never executes actual attacker payloads; it only records the attempt and responds as a real vulnerable device would.
+
+| Vulnerability Class | Simulated Behavior | Goal for Researcher |
+| :--- | :--- | :--- |
+| **Weak Authentication** | Uses common default passwords (`admin123`, `tech123`). | Track brute-force & credential stuffing. |
+| **User Enumeration** | Returns different errors for "Wrong Password" vs "User Not Found". | Identify account discovery attempts. |
+| **Information Disclosure**| `/api/export/config` returns secrets in plaintext. | Monitor for sensitive data exfiltration. |
+| **Command Injection** | `/api/debug/system` echoes back shell commands. | Capture RCE (Remote Code Execution) payloads. |
+| **Broken RBAC** | Admin endpoints are reachable with low-privilege tokens. | Track privilege escalation attempts. |
+| **Verbose Debugging** | API returns stack traces and environment variables. | Observe reconnaissance behavior. |
+| **Insecure Updates** | Accepts any URL for firmware without validation. | Simulate malicious firmware delivery. |
+| **Sequential Sessions** | Predictable session IDs in the backend. | Track session hijacking attempts. |
+
+
+---
+
+## 📁 Project Structure
+
+```text
 Smart_Lock_Simulation/
-├── docker-compose.yml
-├── README.md
-├── .env.example
-├── frontend-app/                    # Next.js 14 (App Router)
-│   ├── Dockerfile
-│   ├── next.config.js
-│   ├── package.json
-│   ├── tailwind.config.ts
-│   ├── postcss.config.js
-│   ├── tsconfig.json
-│   └── src/
-│       ├── app/                     # routes (login, dashboard, settings, ...)
-│       ├── components/              # Sidebar, Header, DoorCard, etc.
-│       ├── lib/                     # api client, auth helper
-│       └── types/                   # shared TS types
-└── smart-lock-service/              # ASP.NET Core Minimal API (.NET 8)
-    ├── Dockerfile
-    ├── SmartLockService.csproj
-    ├── Program.cs
-    ├── appsettings.json
-    ├── Models/
-    ├── Services/
-    └── Endpoints/
+├── docker-compose.yml           # Service orchestration
+├── .env.example                 # Template for environment variables
+├── frontend-app/                # Next.js Frontend
+│   ├── src/app/                 # UI Routes
+│   ├── src/components/          # UI Components
+│   └── Dockerfile               # Frontend containerization
+└── smart-lock-service/          # ASP.NET Core Backend
+    ├── Endpoints/               # API Route Handlers
+    ├── Models/                  # Data Structures
+    ├── Services/                # Simulation Logic
+    └── Dockerfile               # Backend containerization
 ```
 
 ---
 
-## T-Pot integration tips
+## ⚠️ Disclaimer
 
-1. Run this stack on the **same Docker host** as T-Pot, but on a separate bridge network (this compose file already creates `smartlock-net`).
-2. Forward suspicious traffic to T-Pot's sensors via your firewall — the smart lock stack itself only listens on `:3000` and `:8080`.
-3. Ship logs from the backend (stdout) into T-Pot's ELK stack with Filebeat or Logstash if you want correlation.
-4. Keep the honeypot containerized and never on the host network.
+This project is for **educational and research purposes only**. It is designed to be used in a controlled environment as a honeypot. The authors are not responsible for any misuse or damage caused by this software. Use it ethically.
 
 ---
 
-## Disclaimer
+## 🤝 Contributing
 
-This software is for **research, education, and defensive deception** only. Do not deploy against systems you do not own or have explicit permission to test. The authors take no responsibility for misuse.
+Contributions are welcome! If you have ideas for more simulated vulnerabilities or UI improvements, feel free to open a Pull Request.
+
+---
+Created with ❤️ for the Security Community.
