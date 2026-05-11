@@ -30,7 +30,6 @@ SecureLock simulates a modern IoT ecosystem consisting of a management dashboard
 
 ---
 
-
 ## 🛠 Tech Stack & Tools
 
 The project is built using modern, industry-standard technologies to ensure a realistic feel:
@@ -130,17 +129,6 @@ Follow these commands in order to get the project up and running:
    ```
 
 ---
-
-## 🌐 Accessing the Simulation
-
-Once the services are running, you can access them via your browser:
-
-| Service            | URL                                                            | Description                                |
-| :----------------- | :------------------------------------------------------------- | :----------------------------------------- |
-| **User Dashboard** | [http://localhost:3000](http://localhost:3000)                 | The main UI for interacting with the lock. |
-| **API Backend**    | [http://localhost:8080](http://localhost:8080)                 | The backend API root.                      |
-| **Swagger UI**     | [http://localhost:8080/swagger](http://localhost:8080/swagger) | Interactive API documentation.             |
-| **Health Check**   | [http://localhost:8080/health](http://localhost:8080/health)   | API health status.                         |
 
 ### 🔑 Seeded Credentials (Intentional Weakness)
 
