@@ -1,6 +1,6 @@
 # 🔐 SecureLock IoT — Enterprise Smart Lock Simulation
 
-[![Project Status: Active](https://img.shields.io/badge/Project%20Status-Active-brightgreen.svg)](https://github.com/Ma7moudMo7med/Smart-Lock-Simulation)
+[![Project Status: Active](https://img.shields.io/badge/Project%20Status-Active-brightgreen.svg)](https://github.com/Ma7moudMo7med/SecureLock-IoT-Honeypot)
 [![Platform: IoT Honeypot](https://img.shields.io/badge/Platform-IoT%20Honeypot-orange.svg)]()
 [![Backend: .NET 8](https://img.shields.io/badge/Backend-.NET%208-blue.svg)]()
 [![Frontend: Next.js 14](https://img.shields.io/badge/Frontend-Next.js%2014-black.svg)]()
@@ -109,8 +109,8 @@ Follow these commands in order to get the project up and running:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/Ma7moudMo7med/Smart-Lock-Simulation.git
-   cd Smart-Lock-Simulation
+    git clone https://github.com/Ma7moudMo7med/SecureLock-IoT-Honeypot.git
+    cd SecureLock-IoT-Honeypot
    ```
 
 2. **Setup Environment Variables:**
